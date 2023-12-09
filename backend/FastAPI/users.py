@@ -1,4 +1,4 @@
-from fastapi import FastAPI, status
+from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
@@ -40,7 +40,7 @@ async def usersclass():
     return users_list
 
 # Path parameter.
-@app.get('/user/{id}', tags=["Users"], status_code=200)
+@app.get('/user/{id}', tags=["User"], status_code=200)
 async def user(id: int):
     return get_user(id)
     
@@ -51,6 +51,9 @@ Either way, both are possible
 """
 
 # Query parameters
-@app.get('/user/', tags=["Users"], status_code=200)
-async def user_query(id: int):
+@app.get('/user/', tags=["User"], status_code=200)
+async def user_query(id: int | None = None):
     return get_user(id)
+
+
+#@app.post('/user/', tags=[""])
