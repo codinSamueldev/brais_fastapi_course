@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, status
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -17,6 +18,15 @@ users_list = [User(id=0, name="Samuel", last_name="Henao", nickname="csamueldev"
          User(id=2, name="Alberto", last_name="Ramirez", nickname="albertico", programmer=False)]
 
 
+def get_user(id: int):
+    # For each element in user_list, filter each one if the id matches.
+    user = filter(lambda user: user.id == id, users_list)
+    try:
+        return list(user)[0]
+    except:
+        return JSONResponse(content={"404":"Not found"}, status_code=404)
+
+
 @app.get('/usersjson', tags=["JSON Users"])
 async def usersjson():
     return [{"name": "Samuel", "last name": "Henao", "nickname": "csamueldev", "Programmer": True}, 
@@ -29,7 +39,18 @@ async def usersclass():
     # return entity
     return users_list
 
-# Use parameter.
-@app.get('/user/{id}', tags=["Users"])
+# Path parameter.
+@app.get('/user/{id}', tags=["Users"], status_code=200)
 async def user(id: int):
-    return users_list
+    return get_user(id)
+    
+""" 
+We can retrieve information with a path parameter such as id, 
+or with a query such as id, name, last_name, etc. 
+Either way, both are possible
+"""
+
+# Query parameters
+@app.get('/user/', tags=["Users"], status_code=200)
+async def user_query(id: int):
+    return get_user(id)
