@@ -1,8 +1,10 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-app = FastAPI()
+router = APIRouter(prefix="/users", 
+                   tags=["Users"], 
+                   responses={404: {"message": "Not Found"}})
 
 # Base model allows to create entities.
 class User(BaseModel):
@@ -41,20 +43,20 @@ def get_user(id: int):
         return JSONResponse(content={"404":"Not found"}, status_code=404)
 
 
-@app.get('/usersjson', tags=["JSON Users"])
+@router.get('/usersjson')
 async def usersjson():
     return [{"name": "Samuel", "last name": "Henao", "nickname": "csamueldev", "Programmer": True}, 
             {"name": "Alpaca", "last name": "Gonzales", "nickname": "alpacor", "Programmer": False}, 
             {"name": "Alberto", "last name": "Ramirez", "nickname": "albertico", "Programmer": False}]
 
 
-@app.get('/users', tags=["Users"])
+@router.get('/')
 async def users():
     # return entity
     return users_list
 
 # Path parameter.
-@app.get('/user/{id}', tags=["User"], status_code=200)
+@router.get('/{id}', status_code=200)
 async def user(id: int):
     return get_user(id)
     
@@ -65,13 +67,13 @@ Either way, both are possible
 """
 
 # Query parameters
-@app.get('/user/', tags=["User"], status_code=200)
+@router.get('/', status_code=200)
 async def user_query(id: int | None = None):
     return get_user(id)
 
 
 # POST
-@app.post('/user/', tags=["User"], status_code=201, response_model=User)
+@router.post('/', status_code=201, response_model=User)
 async def new_user(user: User):
     if type(get_user(user.id)) == User:
         raise HTTPException(status_code=422, detail="User already exists")
@@ -81,7 +83,7 @@ async def new_user(user: User):
 
 
 # PUT
-@app.put('/user/{id}', tags=["User"], status_code=200)
+@router.put('/{id}', status_code=200)
 async def update_user(user: User):
     for position, users_saved in enumerate(users_list):
         if users_saved.id == user.id:
@@ -91,7 +93,7 @@ async def update_user(user: User):
 
 
 # DELETE
-@app.delete('/user/{id}', tags=["User"], status_code=200)
+@router.delete('/{id}', status_code=200)
 async def delete_user(id: int):
 
     found = False
