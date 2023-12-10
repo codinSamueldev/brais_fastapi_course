@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
@@ -11,6 +11,20 @@ class User(BaseModel):
     last_name : str
     nickname: str
     programmer: bool
+
+    """ model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "id": 999,
+                    "name": "Juan",
+                    "last_name": "Gonzales",
+                    "nickname": "juanito",
+                    "programmer": True
+                }
+            ]
+        }
+    } """
 
 
 users_list = [User(id=0, name="Samuel", last_name="Henao", nickname="csamueldev", programmer=True),
@@ -35,7 +49,7 @@ async def usersjson():
 
 
 @app.get('/users', tags=["Users"])
-async def usersclass():
+async def users():
     # return entity
     return users_list
 
@@ -56,4 +70,39 @@ async def user_query(id: int | None = None):
     return get_user(id)
 
 
-#@app.post('/user/', tags=[""])
+# POST
+@app.post('/user/', tags=["User"], status_code=201, response_model=User)
+async def new_user(user: User):
+    if type(get_user(user.id)) == User:
+        raise HTTPException(status_code=422, detail="User already exists")
+    else:
+        user_created = users_list.append(user)
+        return JSONResponse(status_code=201, content=user_created)
+
+
+# PUT
+@app.put('/user/{id}', tags=["User"], status_code=200)
+async def update_user(user: User):
+    for position, users_saved in enumerate(users_list):
+        if users_saved.id == user.id:
+            users_list[position] = user
+        
+    return user
+
+
+# DELETE
+@app.delete('/user/{id}', tags=["User"], status_code=200)
+async def delete_user(id: int):
+
+    found = False
+
+    for user in users_list:
+        if user.id == id:
+            users_list.remove(user)
+            found = True
+            return {"message": f"user {user.name} deleted"}
+    
+    if user.id not in users_list:
+        raise HTTPException(status_code=400, detail=f"user {id} does not exist.")
+
+
