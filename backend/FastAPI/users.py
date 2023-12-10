@@ -12,7 +12,7 @@ class User(BaseModel):
     nickname: str
     programmer: bool
 
-    """ model_config = {
+    model_config = {
         "json_schema_extra": {
             "examples": [
                 {
@@ -24,7 +24,7 @@ class User(BaseModel):
                 }
             ]
         }
-    } """
+    }
 
 
 users_list = [User(id=0, name="Samuel", last_name="Henao", nickname="csamueldev", programmer=True),
