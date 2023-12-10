@@ -315,6 +315,7 @@ $RECYCLE.BIN/
 *.3dm
 *.max
 
-# End of https://www.toptal.com/developers/gitignore/api/images
+# Auth 
+/FastAPI/routers/basic_auth.py
 
 # End of https://www.toptal.com/developers/gitignore/api/python,macos,windows,linux
