@@ -317,5 +317,6 @@ $RECYCLE.BIN/
 
 # Auth 
 /FastAPI/routers/basic_auth.py
+/FastAPI/routers/auth_users_jwt.py
 
 # End of https://www.toptal.com/developers/gitignore/api/python,macos,windows,linux
