@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
-from routers import products, users
+from routers import products, users, auth_users_jwt
 # import class so as to present static files, imgs.
 from fastapi.staticfiles import StaticFiles
 
@@ -11,6 +11,9 @@ app.include_router(products.router)
 app.include_router(users.router)
 # url: http://127.0.0.1:8000/static/imgs/name_of_the_file.jpeg
 app.mount("/static", StaticFiles(directory="static"), name="img")
+
+# Security
+app.include_router(auth_users_jwt.router)
 
 
 @app.get('/', tags=["Root"])
