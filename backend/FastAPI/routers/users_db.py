@@ -68,28 +68,26 @@ async def new_user(user: User):
 
 
 # PUT
-@router.put('/{id}', status_code=200)
+@router.put('/{id}', status_code=200, response_model=User)
 async def update_user(user: User):
-    for position, users_saved in enumerate(users_list):
-        if users_saved.id == user.id:
-            users_list[position] = user
-        
-    return user
+    user_dict = dict(user)
+    del user_dict["id"]
+
+    try:
+        db_client.local.users.find_one_and_replace({"_id": ObjectId(user.id)}, user_dict)
+    except:
+        raise HTTPException(status_code=400, detail={"message": "Ni un brillo pelao"})
+
+    return search_user("_id", ObjectId(user.id))
 
 
 # DELETE
 @router.delete('/{id}', status_code=200)
-async def delete_user(id: int):
+async def delete_user(id: str):
 
-    found = False
-
-    for user in users_list:
-        if user.id == id:
-            users_list.remove(user)
-            found = True
-            return {"message": f"user {user.name} deleted"}
+    found = db_client.local.users.find_one_and_delete({"_id": ObjectId(id)})
     
-    if user.id not in users_list:
+    if not found:
         raise HTTPException(status_code=400, detail=f"user {id} does not exist.")
 
 
