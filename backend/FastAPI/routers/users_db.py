@@ -18,7 +18,7 @@ users_list = []
 def search_user(field: str, key):
     try:
         # Find user's email in order to prevent have same email in the db
-        user = db_client.local.users.find_one({field: key})
+        user = db_client.users.find_one({field: key})
         # Return all elements in the user_schema()
         return User(**user_schema(user))
     except:
@@ -27,7 +27,7 @@ def search_user(field: str, key):
 
 @router.get('/', response_model=list[User])
 async def users():
-    return users_schema(db_client.local.users.find())
+    return users_schema(db_client.users.find())
 
 # Path parameter.
 @router.get('/{id}', status_code=200)
@@ -59,10 +59,10 @@ async def new_user(user: User):
     del user_dict["id"]
 
     # Store new user id in the users schema.
-    id = db_client.local.users.insert_one(user_dict).inserted_id
+    id = db_client.users.insert_one(user_dict).inserted_id
 
     # Then, find id 
-    new_user = user_schema(db_client.local.users.find_one({"_id": id}))
+    new_user = user_schema(db_client.users.find_one({"_id": id}))
 
     return User(**new_user)
 
@@ -74,7 +74,7 @@ async def update_user(user: User):
     del user_dict["id"]
 
     try:
-        db_client.local.users.find_one_and_replace({"_id": ObjectId(user.id)}, user_dict)
+        db_client.users.find_one_and_replace({"_id": ObjectId(user.id)}, user_dict)
     except:
         raise HTTPException(status_code=400, detail={"message": "Ni un brillo pelao"})
 
@@ -85,7 +85,7 @@ async def update_user(user: User):
 @router.delete('/{id}', status_code=200)
 async def delete_user(id: str):
 
-    found = db_client.local.users.find_one_and_delete({"_id": ObjectId(id)})
+    found = db_client.users.find_one_and_delete({"_id": ObjectId(id)})
     
     if not found:
         raise HTTPException(status_code=400, detail=f"user {id} does not exist.")
