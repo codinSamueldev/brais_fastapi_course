@@ -8,4 +8,4 @@ RUN pip install --no-cache-dir --upgrade -r /SecondTry/requirements.txt
 
 COPY ./backend/FastAPI /SecondTry/FastAPI
 
-CMD ["uvicorn", "SecondTry.FastAPI.main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "FastAPI.main:app", "--host", "0.0.0.0", "--port", "80"]
