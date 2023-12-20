@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from db.schemas.user import user_schema, users_schema
-from db.models.user import User
-from db.client import db_client
+from FastAPI.db.schemas.user import user_schema, users_schema
+from FastAPI.db.models.user import User
+from FastAPI.db.client import db_client
 #
 from bson import ObjectId
 
