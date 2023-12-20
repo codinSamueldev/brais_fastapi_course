@@ -10,7 +10,7 @@ app = FastAPI()
 app.include_router(products.router)
 app.include_router(users.router)
 # url: http://127.0.0.1:8000/static/imgs/name_of_the_file.jpeg
-app.mount("/static", StaticFiles(directory="static"), name="img")
+app.mount("/static", StaticFiles(directory="FastAPI/static/imgs/m.jpeg"), name="static")
 
 # Security Router
 app.include_router(auth_users_jwt.router)
