@@ -2,7 +2,7 @@ FROM python:3.10
 
 WORKDIR /SecondTry
 
-COPY ./FastAPI/requirements.txt /SecondTry/requirements.txt
+COPY ./backend/FastAPI/requirements.txt /SecondTry/requirements.txt
 
 RUN pip install --no-cache-dir --upgrade -r /SecondTry/requirements.txt
 
