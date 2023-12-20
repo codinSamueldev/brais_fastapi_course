@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
-from routers import products, users, auth_users_jwt, users_db
+from FastAPI.routers import products, users, auth_users_jwt, users_db
 # import class so as to present static files, imgs.
 from fastapi.staticfiles import StaticFiles
 
