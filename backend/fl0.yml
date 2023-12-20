@@ -1,0 +1,7 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./Dockerfile  # Explicitly specify the path to Dockerfile
+    ports:
+      - '80:80'
